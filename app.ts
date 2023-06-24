@@ -19,8 +19,14 @@ const openai = new OpenAIApi(configuration);
 
 app.get('/', async (req, res) => {
   try {
+    let ipaddress = req.ip;
+    // Check if the request is coming from localhost
+    if (ipaddress === "::1" || ipaddress === "::ffff:127.0.0.1") {
+      ipaddress = process.env.FALLBACK_IP_ADDRESS!;
+    }
+
     // Use IP-based geolocation service to determine the user's location
-    const geoResponse = await axios.get(`https://ipapi.co/${req.ip}/json/`);
+    const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`);
     const { city, region, country } = geoResponse.data;
 
     // Fetch weather data for the location
