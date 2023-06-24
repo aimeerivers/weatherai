@@ -87,7 +87,6 @@ app.get('/data', async (req, res) => {
     res.json({
       city,
       region,
-      country_name,
       weather,
       imagePrompt,
       image,
