@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import axios from 'axios';
-import OpenAI from 'openai';
+import { Configuration, OpenAIApi } from 'openai';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -11,7 +11,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const openai = new OpenAI(process.env.OPENAI_KEY);
+const configuration = new Configuration({
+  organization: "org-aclFE4ntvukyvGUOQM2GT8c3",
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 app.get('/', async (req, res) => {
   try {
@@ -24,10 +28,10 @@ app.get('/', async (req, res) => {
     const weather = weatherResponse.data.weather[0].main;
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
-    const gptResponse = await openai.complete({
-      engine: 'text-davinci-004',
+    const gptResponse = await openai.createCompletion({
+      model: 'text-davinci-004',
       prompt: `Generate an imaginative image description based on this location: ${city}, ${region}, ${country} with the current weather: ${weather}.`,
-      maxTokens: 100,
+      max_tokens: 100,
     });
     const imagePrompt = gptResponse.data.choices[0].text.trim();
 
