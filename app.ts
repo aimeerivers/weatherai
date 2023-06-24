@@ -34,11 +34,19 @@ app.get('/', async (req, res) => {
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
-      model: 'text-davinci-004',
-      prompt: `Generate an imaginative image description based on this location: ${city}, ${region}, ${country} with the current weather: ${weather}.`,
+      model: 'text-curie-001',
+      prompt: `Generate an imaginative image description based on location and weather:
+        ###
+        location: Copenhagen, Capital Region, DK
+        weather: Copenhagen's skyline appears as if a dream set against a canvas of soft, scattered clouds. The city's history blends quietly with a hint of modernism in all the buildings and structures. Despite the tranquil sky, it's impossible to miss the dynamic energy of the city.
+        ###
+        location: ${city}, ${region}, ${country}
+        weather: ${weather}
+        prompt:
+        `,
       max_tokens: 100,
     });
-    const imagePrompt = gptResponse.data.choices[0].text.trim();
+    const imagePrompt = gptResponse.data.choices[0].text!.trim();
 
     // Use OpenAI's DALL-E API to generate an image
     // Currently, OpenAI's DALL-E API is not publicly available, so this is a placeholder
