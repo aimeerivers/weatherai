@@ -32,6 +32,7 @@ app.get('/data', async (req, res) => {
     // Fetch weather data for the location
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
+    const timestamp = weatherResponse.data.dt;
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
