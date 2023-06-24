@@ -10,13 +10,14 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static('public'));
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
 
-app.get('/', async (req, res) => {
+app.get('/data', async (req, res) => {
   try {
     let ipaddress = req.ip;
     // Check if the request is coming from localhost

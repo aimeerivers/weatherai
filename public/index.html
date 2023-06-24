@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather and Imagery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #weather-info {
+            margin-top: 20px;
+        }
+
+        #image-prompt {
+            margin-top: 20px;
+        }
+
+        #image-display {
+            margin-top: 20px;
+        }
+
+        #image-display img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Location and Weather Information</h1>
+    <div id="location-info"></div>
+    <div id="weather-info"></div>
+    <div id="image-prompt"></div>
+    <div id="image-display"></div>
+
+    <script>
+        async function getData() {
+            try {
+                const response = await fetch('http://localhost:3000/data');
+                const data = await response.json();
+
+                document.getElementById('location-info').textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                document.getElementById('weather-info').textContent = `Current Weather: ${data.weather}`;
+                document.getElementById('image-prompt').textContent = `Imaginative Image Description: ${data.imagePrompt}`;
+                document.getElementById('image-display').innerHTML = `<img src="${data.image}" alt="Generated Image">`;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Fetch data every hour
+        getData();
+        setInterval(getData, 60 * 60 * 1000);
+    </script>
+</body>
+</html>
