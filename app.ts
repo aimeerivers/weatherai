@@ -32,20 +32,37 @@ app.get('/data', async (req, res) => {
     // Fetch weather data for the location
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
-    const timestamp = weatherResponse.data.dt;
+    const timestamp = Date.now() / 1000;
+
+    // Use OpenAI's GPT-3 to find out the current time in the user's location
+    const dateTimeResponse = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Work out the current date and time in a particular location based on the timestamp.
+      ###
+      location: Copenhagen, Capital Region, Denmark
+      timestamp: 1687641166.627
+      result: 24 June, 11:12 PM
+      ###
+      location: ${city}, ${region}, ${country_name}
+      timestamp: ${timestamp}
+      result:       
+      `,
+      max_tokens: 10,
+    });
+    const dateTimeInLocation = dateTimeResponse.data.choices[0].text!.trim();
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `Generate an imaginative image description based on location, timestamp and weather. Be sure to include the city name, time of day and weather in the description.
+      prompt: `Generate an imaginative image description based on location, timestamp and weather.
         ###
         location: Copenhagen, Capital Region, Denmark
-        timestamp: 1630483200
+        timestamp: 24 June, 11:12 PM
         weather: scattered clouds
         prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
         location: ${city}, ${region}, ${country_name}
-        timestamp: ${timestamp}
+        timestamp: ${dateTimeInLocation}
         weather: ${weather}
         prompt:
         `,
