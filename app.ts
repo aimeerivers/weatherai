@@ -61,6 +61,11 @@ app.get('/data', async (req, res) => {
         weather: scattered clouds
         prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
+        location: Adelaide, South Australia, Australia
+        timestamp: 14 February, 10:00 AM
+        weather: broken clouds
+        prompt: The sun peeks through broken clouds as the day begins in Adelaide. A pleasant breeze rushes through the city, carrying the sound of birds singing and not far off, the chatter of people starting their day.
+        ###
         location: ${city}, ${region}, ${country_name}
         timestamp: ${dateTimeInLocation}
         weather: ${weather}
