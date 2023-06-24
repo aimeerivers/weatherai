@@ -27,10 +27,10 @@ app.get('/data', async (req, res) => {
 
     // Use IP-based geolocation service to determine the user's location
     const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`);
-    const { city, region, country, latitude, longitude } = geoResponse.data;
+    const { city, region, country } = geoResponse.data;
 
     // Fetch weather data for the location
-    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.WEATHER_API_KEY}`);
+    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
