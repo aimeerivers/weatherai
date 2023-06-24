@@ -36,13 +36,16 @@ app.get('/data', async (req, res) => {
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
-      model: 'text-curie-001',
-      prompt: `Generate an imaginative image description based on location and weather:
+      model: 'text-davinci-003',
+      prompt: `Generate an imaginative image description based on location, timestamp and weather. Be sure to include the city name, time of day and weather in the description.
         ###
         location: Copenhagen, Capital Region, DK
-        weather: Copenhagen's skyline appears as if a dream set against a canvas of soft, scattered clouds. The city's history blends quietly with a hint of modernism in all the buildings and structures. Despite the tranquil sky, it's impossible to miss the dynamic energy of the city.
+        timestamp: 1630483200
+        weather: scattered clouds
+        prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
         location: ${city}, ${region}, ${country}
+        timestamp: ${timestamp}
         weather: ${weather}
         prompt:
         `,
