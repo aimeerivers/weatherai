@@ -97,10 +97,5 @@ app.get('/data', async (req, res) => {
   }
 });
 
-// Fetch new data every hour and update the frontend
-setInterval(() => {
-  app.get('/');
-}, 60 * 60 * 1000);
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
