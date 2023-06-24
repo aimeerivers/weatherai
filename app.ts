@@ -49,8 +49,12 @@ app.get('/', async (req, res) => {
     const imagePrompt = gptResponse.data.choices[0].text!.trim();
 
     // Use OpenAI's DALL-E API to generate an image
-    // Currently, OpenAI's DALL-E API is not publicly available, so this is a placeholder
-    const image = "https://example.com/placeholder.png";
+    const imageResponse = await openai.createImage({
+      prompt: imagePrompt,
+      n: 1,
+      size: '1024x1024'
+    });
+    const image = imageResponse.data.data[0].url;
 
     // Send data to the frontend
     res.json({
