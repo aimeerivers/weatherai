@@ -51,7 +51,7 @@
                 const response = await fetch('http://localhost:3000/data');
                 const data = await response.json();
 
-                document.getElementById('location-info').textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                document.getElementById('location-info').textContent = `Location: ${data.city}, ${data.region}, ${data.country_name}`;
                 document.getElementById('weather-info').textContent = `Current Weather: ${data.weather}`;
                 document.getElementById('image-prompt').textContent = `Imaginative Image Description: ${data.imagePrompt}`;
                 document.getElementById('image-display').innerHTML = `<img src="${data.image}" alt="Generated Image">`;

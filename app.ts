@@ -27,10 +27,10 @@ app.get('/data', async (req, res) => {
 
     // Use IP-based geolocation service to determine the user's location
     const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`);
-    const { city, region, country } = geoResponse.data;
+    const { city, region, country_name } = geoResponse.data;
 
     // Fetch weather data for the location
-    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${process.env.WEATHER_API_KEY}`);
+    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
     const timestamp = weatherResponse.data.dt;
 
@@ -39,12 +39,12 @@ app.get('/data', async (req, res) => {
       model: 'text-davinci-003',
       prompt: `Generate an imaginative image description based on location, timestamp and weather. Be sure to include the city name, time of day and weather in the description.
         ###
-        location: Copenhagen, Capital Region, DK
+        location: Copenhagen, Capital Region, Denmark
         timestamp: 1630483200
         weather: scattered clouds
         prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
-        location: ${city}, ${region}, ${country}
+        location: ${city}, ${region}, ${country_name}
         timestamp: ${timestamp}
         weather: ${weather}
         prompt:
@@ -65,7 +65,7 @@ app.get('/data', async (req, res) => {
     res.json({
       city,
       region,
-      country,
+      country_name,
       weather,
       imagePrompt,
       image,
