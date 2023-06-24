@@ -21,7 +21,7 @@
 
         .location-weather {
             flex: 1;
-            padding: 0 20px;
+            padding: 0 5vw;
         }
 
         .image {
@@ -30,10 +30,17 @@
 
         h1 {
             color: #333;
+            font-size: 3rem;
         }
 
         h2 {
             font-style: italic;
+            font-size: 2rem;
+        }
+
+        #image-prompt {
+            font-style: italic;
+            font-size: 1.5rem;
         }
 
         #image-display img {
@@ -46,7 +53,7 @@
 <body>
     <div class="container">
         <div class="location-weather">
-            <h1 id="location-info"></h1>
+            <h1 id="location-info">Fetching data ...</h1>
             <h2 id="weather-info"></h2>
             <p id="image-prompt"></p>
         </div>
