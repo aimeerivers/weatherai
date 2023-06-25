@@ -31,27 +31,31 @@ app.get('/data', async (req, res) => {
     const { city, region, country_name } = geoResponse.data;
 
     // Fetch weather data for the location
-    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&appid=${process.env.WEATHER_API_KEY}`);
+    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&units=metric&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
+    const temperature = weatherResponse.data.main.feels_like.toFixed(0);
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `Generate an imaginative image description based on location, timestamp and weather.
+      prompt: `Generate an imaginative image description based on location, timestamp, weather and temperature.
         ###
         location: Copenhagen, Capital Region, Denmark
         timestamp: 25.6.2023 23.12.49
         weather: scattered clouds
+        temperature: 18 degrees celsius
         prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
         location: Adelaide, South Australia, Australia
         timestamp: 14/02/2023 10:00:00
         weather: broken clouds
+        temperature: 14 degrees celsius
         prompt: The sun peeks through broken clouds as the day begins in Adelaide. A pleasant breeze rushes through the city, carrying the sound of birds singing and not far off, the chatter of people starting their day.
         ###
         location: ${city}, ${region}, ${country_name}
         timestamp: ${currentTime}
         weather: ${weather}
+        temperature: ${temperature} degrees celsius
         prompt:
         `,
       max_tokens: 100,
@@ -71,6 +75,7 @@ app.get('/data', async (req, res) => {
       city,
       region,
       weather,
+      temperature,
       imagePrompt,
       image,
     });

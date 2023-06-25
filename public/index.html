@@ -69,7 +69,7 @@
                 const data = await response.json();
 
                 document.getElementById('location-info').textContent = `${data.city}, ${data.region}`;
-                document.getElementById('weather-info').textContent = data.weather;
+                document.getElementById('weather-info').textContent = `${data.weather} (${data.temperature}°C)`;
                 document.getElementById('image-prompt').textContent = data.imagePrompt;
                 document.getElementById('image-display').innerHTML = `<img src="${data.image}" alt="${data.imagePrompt}">`;
             } catch (error) {
