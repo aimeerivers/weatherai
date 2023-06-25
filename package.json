@@ -1,4 +1,6 @@
 {
+  "name": "WeatherAI",
+  "description": "Generates AI images based on your location, weather conditions and time of day",
   "scripts": {
     "start": "ts-node app.ts",
     "watch": "nodemon app.ts"
