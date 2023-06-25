@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { type Request, type Response } from 'express'
 import bodyParser from 'body-parser'
 import axios from 'axios'
 import { Configuration, OpenAIApi } from 'openai'
@@ -13,29 +13,34 @@ app.use(cors())
 app.use(express.static('public'))
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY ?? ''
 })
 const openai = new OpenAIApi(configuration)
 
-app.get('/data', async (req, res) => {
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.get('/data', async (req: Request, res: Response) => {
   try {
-    const currentTime = req.query.currentTime || new Date().toLocaleString()
+    const currentTime: string = req.query.currentTime?.toString() ?? new Date().toLocaleString()
     let ipaddress = req.ip
     // Check if the request is coming from localhost
     if (ipaddress === '::1' || ipaddress === '::ffff:127.0.0.1') {
-      ipaddress = process.env.FALLBACK_IP_ADDRESS!
+      ipaddress = '185.166.85.234'
     }
 
     // Use IP-based geolocation service to determine the user's location
     const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`)
-    const { city, region, country_name } = geoResponse.data
+    const city: string = geoResponse.data.city
+    const region: string = geoResponse.data.region
+    const countryName: string = geoResponse.data.country_name
 
     // Fetch weather data for the location
     const weatherResponse = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&units=metric&appid=${process.env.WEATHER_API_KEY}`
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryName}&units=metric&appid=${
+        process.env.WEATHER_API_KEY ?? ''
+      }`
     )
-    const weather = weatherResponse.data.weather[0].description
-    const temperature = weatherResponse.data.main.feels_like.toFixed(0)
+    const weather: string = weatherResponse.data.weather[0].description
+    const temperature: number = weatherResponse.data.main.feels_like.toFixed(0)
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
@@ -60,7 +65,7 @@ app.get('/data', async (req, res) => {
         temperature: 31 degrees celsius
         prompt: The temperature begins to cool as the day draws to a close in Yokohama. Few clouds drift lazily above, giving the city a dreamy appearance. The streets below are alive with people chatting and enjoying the twilight hours before nightfall.
         ###
-        location: ${city}, ${region}, ${country_name}
+        location: ${city}, ${region}, ${countryName}
         timestamp: ${currentTime}
         weather: ${weather}
         temperature: ${temperature} degrees celsius
@@ -68,7 +73,9 @@ app.get('/data', async (req, res) => {
         `,
       max_tokens: 100
     })
-    const imagePrompt = gptResponse.data.choices[0].text!.trim()
+    const imagePrompt: string =
+      gptResponse.data.choices[0]?.text?.trim() ??
+      `The weather in ${city}, ${region} is ${weather} and the temperature is ${temperature} degrees celsius.`
 
     // Use OpenAI's DALL-E API to generate an image
     const imageResponse = await openai.createImage({
@@ -93,5 +100,7 @@ app.get('/data', async (req, res) => {
   }
 })
 
-const port = process.env.PORT || 3000
-app.listen(port, () => { console.log(`Server is running on port ${port}`) })
+const port = process.env.PORT ?? 3000
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})
