@@ -19,6 +19,7 @@ const openai = new OpenAIApi(configuration);
 
 app.get('/data', async (req, res) => {
   try {
+    const currentTime = req.query.currentTime || new Date().toLocaleString();
     let ipaddress = req.ip;
     // Check if the request is coming from localhost
     if (ipaddress === "::1" || ipaddress === "::ffff:127.0.0.1") {
@@ -32,24 +33,6 @@ app.get('/data', async (req, res) => {
     // Fetch weather data for the location
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&appid=${process.env.WEATHER_API_KEY}`);
     const weather = weatherResponse.data.weather[0].description;
-    const timestamp = Date.now() / 1000;
-
-    // Use OpenAI's GPT-3 to find out the current time in the user's location
-    const dateTimeResponse = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Work out the current date and time in a particular location based on the timestamp.
-      ###
-      location: Copenhagen, Capital Region, Denmark
-      timestamp: 1687641166.627
-      result: 24 June, 11:12 PM
-      ###
-      location: ${city}, ${region}, ${country_name}
-      timestamp: ${timestamp}
-      result:       
-      `,
-      max_tokens: 10,
-    });
-    const dateTimeInLocation = dateTimeResponse.data.choices[0].text!.trim();
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
@@ -57,17 +40,17 @@ app.get('/data', async (req, res) => {
       prompt: `Generate an imaginative image description based on location, timestamp and weather.
         ###
         location: Copenhagen, Capital Region, Denmark
-        timestamp: 24 June, 11:12 PM
+        timestamp: 25.6.2023 23.12.49
         weather: scattered clouds
         prompt: As the sun sets behind Copenhagen's skyline, the city's nightlife comes alive. Street performers, restaurants and clubs fill the air with sound and motion, welcoming visitors into the city's lively world.
         ###
         location: Adelaide, South Australia, Australia
-        timestamp: 14 February, 10:00 AM
+        timestamp: 14/02/2023 10:00:00
         weather: broken clouds
         prompt: The sun peeks through broken clouds as the day begins in Adelaide. A pleasant breeze rushes through the city, carrying the sound of birds singing and not far off, the chatter of people starting their day.
         ###
         location: ${city}, ${region}, ${country_name}
-        timestamp: ${dateTimeInLocation}
+        timestamp: ${currentTime}
         weather: ${weather}
         prompt:
         `,
