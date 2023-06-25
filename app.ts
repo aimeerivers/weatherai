@@ -38,7 +38,7 @@ app.get('/data', async (req, res) => {
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `Generate an imaginative image description based on location, timestamp, weather and temperature.
+      prompt: `Generate an imaginative image description based on location, timestamp, weather and temperature. Make sure to describe appropriate weather for the time of day, season and location. The description should be 2-3 sentences long and should be written in a way that makes it easy to imagine the scene.
         ###
         location: Copenhagen, Capital Region, Denmark
         timestamp: 25.6.2023 23.12.49
