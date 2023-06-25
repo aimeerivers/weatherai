@@ -52,6 +52,12 @@ app.get('/data', async (req, res) => {
         temperature: 14 degrees celsius
         prompt: The sun peeks through broken clouds as the day begins in Adelaide. A pleasant breeze rushes through the city, carrying the sound of birds singing and not far off, the chatter of people starting their day.
         ###
+        location: Yokohama, Kanagawa, Japan
+        timestamp: 2023-06-25 17:10
+        weather: few clouds
+        temperature: 31 degrees celsius
+        prompt: The temperature begins to cool as the day draws to a close in Yokohama. Few clouds drift lazily above, giving the city a dreamy appearance. The streets below are alive with people chatting and enjoying the twilight hours before nightfall.
+        ###
         location: ${city}, ${region}, ${country_name}
         timestamp: ${currentTime}
         weather: ${weather}
