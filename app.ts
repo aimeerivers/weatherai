@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
@@ -22,7 +22,7 @@ app.get('/data', async (req, res) => {
     const currentTime = req.query.currentTime || new Date().toLocaleString();
     let ipaddress = req.ip;
     // Check if the request is coming from localhost
-    if (ipaddress === "::1" || ipaddress === "::ffff:127.0.0.1") {
+    if (ipaddress === '::1' || ipaddress === '::ffff:127.0.0.1') {
       ipaddress = process.env.FALLBACK_IP_ADDRESS!;
     }
 
@@ -31,7 +31,9 @@ app.get('/data', async (req, res) => {
     const { city, region, country_name } = geoResponse.data;
 
     // Fetch weather data for the location
-    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&units=metric&appid=${process.env.WEATHER_API_KEY}`);
+    const weatherResponse = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},${country_name}&units=metric&appid=${process.env.WEATHER_API_KEY}`
+    );
     const weather = weatherResponse.data.weather[0].description;
     const temperature = weatherResponse.data.main.feels_like.toFixed(0);
 
@@ -72,7 +74,7 @@ app.get('/data', async (req, res) => {
     const imageResponse = await openai.createImage({
       prompt: imagePrompt,
       n: 1,
-      size: '1024x1024'
+      size: '1024x1024',
     });
     const image = imageResponse.data.data[0].url;
 
