@@ -22,7 +22,7 @@ app.get('/data', async (req: Request, res: Response) => {
   try {
     const currentTime: string = req.query.currentTime?.toString() ?? new Date().toLocaleString()
     let ipaddress = req.ip
-    const isValidIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipaddress);
+    const isValidIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipaddress)
     // Fallback to known IP address if invalid
     if (!isValidIPv4) {
       ipaddress = '185.166.85.234'
