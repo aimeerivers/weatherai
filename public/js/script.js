@@ -1,6 +1,6 @@
 async function getData() {
   try {
-    const response = await fetch('http://localhost:3000/data?currentTime=' + new Date().toLocaleString())
+    const response = await fetch('/data?currentTime=' + new Date().toLocaleString())
     const data = await response.json()
 
     document.getElementById('location-info').textContent = `${data.city}, ${data.region}`
