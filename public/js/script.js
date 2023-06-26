@@ -14,4 +14,4 @@ async function getData() {
 
 // Fetch data periodially
 getData()
-setInterval(getData, 10 * 60 * 1000)
+setInterval(getData, 60 * 60 * 1000)
