@@ -21,18 +21,21 @@ const openai = new OpenAIApi(configuration)
 app.get('/data', async (req: Request, res: Response) => {
   try {
     const currentTime: string = req.query.currentTime?.toString() ?? new Date().toLocaleString()
-    let ipaddress = req.ip
-    const isValidIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipaddress)
-    // Fallback to known IP address if invalid
-    if (!isValidIPv4) {
-      ipaddress = '185.166.85.234'
-    }
+    // let ipaddress = req.ip
+    // const isValidIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipaddress)
+    // if (!isValidIPv4) {
+    //   ipaddress = '185.166.85.234'
+    // }
 
     // Use IP-based geolocation service to determine the user's location
-    const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`)
-    const city: string = geoResponse.data.city
-    const region: string = geoResponse.data.region
-    const countryName: string = geoResponse.data.country_name
+    // const geoResponse = await axios.get(`https://ipapi.co/${ipaddress}/json/`)
+    // const city: string = geoResponse.data.city
+    // const region: string = geoResponse.data.region
+    // const countryName: string = geoResponse.data.country_name
+
+    const city = "Copenhagen";
+    const region = "Capital Region"
+    const countryName = "Denmark"
 
     // Fetch weather data for the location
     const weatherResponse = await axios.get(
