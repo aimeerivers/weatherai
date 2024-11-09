@@ -1,3 +1,7 @@
 {
-  "extends": "eslint-config-plus-prettier/.npmpackagejsonlintrc.json"
+  "extends": "eslint-config-plus-prettier/.npmpackagejsonlintrc.json",
+  "rules": {
+    "no-caret-version-dependencies": "error",
+    "prefer-caret-version-dependencies": "off"
+  }
 }
