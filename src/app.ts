@@ -1,26 +1,25 @@
-import express, { type Request, type Response } from 'express'
-import bodyParser from 'body-parser'
-import axios from 'axios'
-import { Configuration, OpenAIApi } from 'openai'
-import cors from 'cors'
-import dotenv from 'dotenv'
+import axios from "axios";
+import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { type Request, type Response } from "express";
+import { Configuration, OpenAIApi } from "openai";
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
-app.use(bodyParser.json())
-app.use(cors())
-app.use(express.static('public'))
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static("public"));
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY ?? ''
-})
-const openai = new OpenAIApi(configuration)
+  apiKey: process.env.OPENAI_API_KEY ?? "",
+});
+const openai = new OpenAIApi(configuration);
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get('/data', async (req: Request, res: Response) => {
+app.get("/data", async (req: Request, res: Response) => {
   try {
-    const currentTime: string = req.query.currentTime?.toString() ?? new Date().toLocaleString()
+    const currentTime: string = req.query.currentTime?.toString() ?? new Date().toLocaleString();
     // let ipaddress = req.ip
     // const isValidIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(ipaddress)
     // if (!isValidIPv4) {
@@ -34,21 +33,21 @@ app.get('/data', async (req: Request, res: Response) => {
     // const countryName: string = geoResponse.data.country_name
 
     const city = "Copenhagen";
-    const region = "Capital Region"
-    const countryName = "Denmark"
+    const region = "Capital Region";
+    const countryName = "Denmark";
 
     // Fetch weather data for the location
     const weatherResponse = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryName}&units=metric&appid=${
-        process.env.WEATHER_API_KEY ?? ''
+        process.env.WEATHER_API_KEY ?? ""
       }`
-    )
-    const weather: string = weatherResponse.data.weather[0].description
-    const temperature: number = weatherResponse.data.main.feels_like.toFixed(0)
+    );
+    const weather: string = weatherResponse.data.weather[0].description;
+    const temperature: number = weatherResponse.data.main.feels_like.toFixed(0);
 
     // Use OpenAI's GPT-4 to generate an image prompt based on the location and weather
     const gptResponse = await openai.createCompletion({
-      model: 'text-davinci-003',
+      model: "text-davinci-003",
       prompt: `Generate an imaginative image description based on location, timestamp, weather and temperature. Make sure to describe appropriate weather for the time of day, season and location. The description should be 2-3 sentences long and should be written in a way that makes it easy to imagine the scene.
         ###
         location: Copenhagen, Capital Region, Denmark
@@ -75,19 +74,19 @@ app.get('/data', async (req: Request, res: Response) => {
         temperature: ${temperature} degrees celsius
         prompt:
         `,
-      max_tokens: 100
-    })
+      max_tokens: 100,
+    });
     const imagePrompt: string =
       gptResponse.data.choices[0]?.text?.trim() ??
-      `The weather in ${city}, ${region} is ${weather} and the temperature is ${temperature} degrees celsius.`
+      `The weather in ${city}, ${region} is ${weather} and the temperature is ${temperature} degrees celsius.`;
 
     // Use OpenAI's DALL-E API to generate an image
     const imageResponse = await openai.createImage({
       prompt: imagePrompt,
       n: 1,
-      size: '1024x1024'
-    })
-    const image = imageResponse.data.data[0].url
+      size: "1024x1024",
+    });
+    const image = imageResponse.data.data[0].url;
 
     // Send data to the frontend
     res.json({
@@ -96,15 +95,15 @@ app.get('/data', async (req: Request, res: Response) => {
       weather,
       temperature,
       imagePrompt,
-      image
-    })
+      image,
+    });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Failed to fetch data' })
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch data" });
   }
-})
+});
 
-const port = process.env.PORT ?? 3000
+const port = process.env.PORT ?? 3000;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+  console.log(`Server is running on port ${port}`);
+});
