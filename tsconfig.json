@@ -1,6 +1,6 @@
 {
   "extends": "eslint-config-plus-prettier/tsconfig.json",
-  "include": ["**/*.ts"],
+  "include": ["src"],
   "compilerOptions": {
     "outDir": "dist"
   }
