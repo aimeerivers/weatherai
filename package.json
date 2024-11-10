@@ -29,9 +29,9 @@
     "@types/express": "4.17.17",
     "@types/node": "22.9.0",
     "concurrently": "9.1.0",
-    "eslint-config-plus-prettier": "3.0.0",
+    "eslint-config-plus-prettier": "4.0.0",
     "nodemon": "3.1.7",
     "typescript": "5.6.3"
   },
-  "prettier": "eslint-config-plus-prettier/.prettierrc.json"
+  "prettier": "eslint-config-plus-prettier/prettier"
 }
